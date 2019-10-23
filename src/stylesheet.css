@@ -225,3 +225,22 @@ input {
 .A {
     fill: #CF9237
 }
+
+.title {
+    margin-top: 0.5em;
+    font-size: 4em;
+    position: absolute;
+    text-align: center;
+    top: 5.5em;
+    width: 100%;
+    margin-bottom: -2em;
+    font-weight: unset;
+    font-family: cursive;
+    transition: top 1000ms;
+}
+
+.mine {
+    font-size: 3em;
+    margin-top: 10em;
+    font-family: cursive;
+}

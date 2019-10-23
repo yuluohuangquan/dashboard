@@ -11,18 +11,27 @@
 
 $("#inputfile").change(function () {
   $("#inputfile").attr("hidden", true);
-  var r = new FileReader();
-  r.readAsText(this.files[0], config.encoding);
-  r.onload = function () {
-    //读取完成后，数据保存在对象的result属性中
-    var data = d3.csvParse(this.result);
-    window.console.log(data);
-    try {
-      draw(data);
-    } catch (error) {
-      alert(error);
-    }
-  };
+  // $("title").style.marginBottom = '-2em';
+  // $("mine").style.marginBottom = '-2em';
+  setTimeout(function(){
+    $("#mine").attr("hidden", true);
+    $("#title").css('top', '0.5em');
+    $("#title").css('marginBottom', '-2em');
+  }, 2500);
+  var that = this;
+  setTimeout(function(){
+    var r = new FileReader();
+    r.readAsText(that.files[0], config.encoding);
+    r.onload = function () {
+      //读取完成后，数据保存在对象的result属性中
+      var data = d3.csvParse(this.result);
+      try {
+        draw(data);
+      } catch (error) {
+        alert(error);
+      }
+    };
+  }, 3000);
 });
 
 function draw(data) {
@@ -499,7 +508,8 @@ function draw(data) {
         }
       })
       .attr("fill-opacity", 0)
-      .attr("height", 26)
+      // 高度
+      .attr("height", 36)
       .attr("y", 50)
       .style("fill", d => getColor(d))
       .transition("a")
@@ -552,7 +562,6 @@ function draw(data) {
       .attr("class", function () {
         return "barInfo";
       })
-      .attr("y", 50)
       .attr("stroke-width", "0px")
       .attr("fill-opacity", 0)
       .transition()
@@ -574,7 +583,7 @@ function draw(data) {
         }
         return 1;
       })
-      .attr("y", 2)
+      .attr("y", 10)
       .attr("dy", ".5em")
       .attr("text-anchor", function () {
         if (long) return "start";
@@ -616,7 +625,6 @@ function draw(data) {
             return xScale(currentData[currentData.length - 1].value);
           }
         })
-        .attr("y", 50)
         .attr("fill-opacity", 0)
         .style("fill", d => getColor(d))
         .transition()
@@ -637,14 +645,13 @@ function draw(data) {
           };
         })
         .attr("fill-opacity", 1)
-        .attr("y", 0)
         .attr("class", function (d) {
           return "value";
         })
         .attr("x", d => {
           return xScale(xValue(d)) + 10;
         })
-        .attr("y", 22);
+        .attr("y", 28);
     }
     var barUpdate = bar
       .transition("2")
