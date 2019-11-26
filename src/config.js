@@ -37,8 +37,11 @@
 
   // 字段的值与其对应的颜色值
   color: {
-    "Chinese": "#1177CC",
-    "Japanese": "#667788"
+    "su": "#66C6C7",
+    "yu": "#B6D4A0",
+    "eng": "#88C6D8",
+    "yu2": "#F8D290",
+    "ch": "#C3A0D1",
   },
 
   // 颜色渐变：颜色绑定增长率
@@ -54,10 +57,10 @@
 
   // 附加信息内容。
   // left label
-  itemLabel: "左侧文字",
+  itemLabel: "榜首",
 
   // right label
-  typeLabel: "右侧文字",
+  typeLabel: "",
 
 
   // 榜首项目信息的水平位置 。
@@ -147,15 +150,19 @@
   showLabel: true,
 
   // label x轴位置
-  labelx: -10,
+  labelx: -50,
 
   use_img: true,
 
   // 图片路径，本地图片或者网上图片。
   // 也可在imgs.js中配置。
   imgs: {
-    "条目": "http://i1.hdslb.com/bfs/face/983034448f81f45f05956d0455a86fe0639d6a36.jpg",
-    "任意名称": "path/to/img"
+    "su": "images/1.png",
+    "yu": "images/2.png",
+    "ch": "images/3.png",
+    "yu2": "images/4.png",
+    "eng": "images/5.png",
+    "as": "images/6.png",
   },
 
   // 全局背景颜色

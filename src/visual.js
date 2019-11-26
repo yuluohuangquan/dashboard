@@ -312,8 +312,6 @@ function draw(data) {
     dataSort();
 
     d3.transition()
-      .duration(500000)
-      .delay((d, i) => i * 2000)
       .each(redraw)
       .each(change);
     lastData = currentData;
@@ -476,37 +474,37 @@ function draw(data) {
         return "translate(0," + yScale(yValue(d)) + ")";
       });
 
-    if (config.use_img) {
-      barEnter
-        .append("defs")
-        .append("pattern")
-        .attr("id", d => d.name)
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .append("image")
-        .attr("x", "0")
-        .attr("y", "0")
-        .attr("width", "40")
-        .attr("height", "40")
-        .attr("href", d => config.imgs[d.name]);
-
-      barEnter
-        .append("circle")
-        .attr("fill-opacity", 0)
-        .attr("cy", 63)
-        .attr('fill', d => "url(#" + encodeURIComponent(d.name).replace("'", "%27").replace("(", "%28").replace(")", "%29") + ")")
-        .attr("stroke-width", "0px")
-        .transition("a")
-        .delay(500 * interval_time)
-        .duration(2490 * interval_time)
-        .attr("stroke", d => getColor(d))
-        .attr("stroke-width", "4px")
-        .attr("x", -16)
-        .attr("cx", -22)
-        .attr("cy", 13)
-        .attr("r", 40 / 2)
-        .attr("fill-opacity", 1);
-    }
+      if (config.use_img) {
+        barEnter
+          .append("defs")
+          .append("pattern")
+          .attr("id", d => d.name)
+          .attr("width", "100%")
+          .attr("height", "100%")
+          .append("image")
+          .attr("x", "0")
+          .attr("y", "0")
+          .attr("width", "40")
+          .attr("height", "40")
+          .attr("href", d => config.imgs[d.name]);
+  
+        barEnter
+          .append("circle")
+          .attr("fill-opacity", 0)
+          .attr("cy", 63)
+          .attr('fill', d => "url(#" + encodeURIComponent(d.name).replace("'", "%27").replace("(", "%28").replace(")", "%29") + ")")
+          .attr("stroke-width", "0px")
+          .transition("a")
+          .delay(500 * interval_time)
+          .duration(2490 * interval_time)
+          .attr("stroke", d => getColor(d))
+          .attr("stroke-width", "4px")
+          .attr("x", -16)
+          .attr("cx", -22)
+          .attr("cy", 13)
+          .attr("r", 40 / 2)
+          .attr("fill-opacity", 1);
+      }
     barEnter
       .append("rect")
       .attr("width", function(d) {
