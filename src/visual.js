@@ -9,23 +9,24 @@
 // import * as d3 from 'd3';
 // require("./stylesheet.css");
 
-$("#inputfile").change(function () {
+$("#inputfile").change(function() {
   $("#inputfile").attr("hidden", true);
   // $("title").style.marginBottom = '-2em';
   // $("mine").style.marginBottom = '-2em';
-  setTimeout(function(){
+  setTimeout(function() {
     $("#mine").attr("hidden", true);
-    $("#title").css('top', '0.5em');
-    $("#title").css('marginBottom', '-2em');
+    $("#title").css("top", "0.5em");
+    $("#title").css("marginBottom", "-2em");
   }, 2500);
   var that = this;
-  setTimeout(function(){
+  setTimeout(function() {
     var r = new FileReader();
     r.readAsText(that.files[0], config.encoding);
-    r.onload = function () {
+    r.onload = function() {
       //读取完成后，数据保存在对象的result属性中
       var data = d3.csvParse(this.result);
       try {
+        window.console.log(data);
         draw(data);
       } catch (error) {
         alert(error);
@@ -68,9 +69,15 @@ function draw(data) {
   function getColor(d) {
     var r = 0.0;
     if (changeable_color) {
-      var colorRange = d3.interpolateCubehelix(config.color_range[0], config.color_range[1]);
+      var colorRange = d3.interpolateCubehelix(
+        config.color_range[0],
+        config.color_range[1]
+      );
       if (divide_changeable_color_by_type && d["type"] in config.color_ranges) {
-        var colorRange = d3.interpolateCubehelix(config.color_ranges[d["type"]][0], config.color_ranges[d["type"]][1]);
+        var colorRange = d3.interpolateCubehelix(
+          config.color_ranges[d["type"]][0],
+          config.color_ranges[d["type"]][1]
+        );
       }
       var v =
         Math.abs(rate[d.name] - rate["MIN_RATE"]) /
@@ -219,7 +226,7 @@ function draw(data) {
     .attr("style:visibility", dateLabel_switch)
     .attr("x", dateLabel_x)
     .attr("y", dateLabel_y)
-    .attr("text-anchor", function () {
+    .attr("text-anchor", function() {
       return "end";
     })
     .text(currentdate);
@@ -232,7 +239,7 @@ function draw(data) {
 
   function dataSort() {
     if (reverse) {
-      currentData.sort(function (a, b) {
+      currentData.sort(function(a, b) {
         if (Number(a.value) == Number(b.value)) {
           var r1 = 0;
           var r2 = 0;
@@ -248,7 +255,7 @@ function draw(data) {
         }
       });
     } else {
-      currentData.sort(function (a, b) {
+      currentData.sort(function(a, b) {
         if (Number(a.value) == Number(b.value)) {
           var r1 = 0;
           var r2 = 0;
@@ -304,7 +311,9 @@ function draw(data) {
     currentData = currentData.slice(0, max_number);
     dataSort();
 
-    d3.transition("2")
+    d3.transition()
+      .duration(500000)
+      .delay((d, i) => i * 2000)
       .each(redraw)
       .each(change);
     lastData = currentData;
@@ -379,7 +388,7 @@ function draw(data) {
         .transition()
         .duration(baseTime * interval_time)
         .ease(d3.easeLinear)
-        .tween("text", function (d) {
+        .tween("text", function(d) {
           var self = this;
           var i = d3.interpolateDate(
             new Date(self.textContent),
@@ -387,7 +396,7 @@ function draw(data) {
           );
           // var prec = (new Date(d.date) + "").split(".");
           // var round = (prec.length > 1) ? Math.pow(10, prec[1].length) : 1;
-          return function (t) {
+          return function(t) {
             var dateformat = d3.timeFormat(timeFormat);
             self.textContent = dateformat(i(t));
           };
@@ -416,13 +425,13 @@ function draw(data) {
       .domain(currentData.map(d => d.name).reverse())
       .range([innerHeight, 0]);
 
-    var bar = g.selectAll(".bar").data(currentData, function (d) {
+    var bar = g.selectAll(".bar").data(currentData, function(d) {
       return d.name;
     });
 
     if (showMessage) {
       // 榜首文字
-      topLabel.data(currentData).text(function (d) {
+      topLabel.data(currentData).text(function(d) {
         if (lastname == d.name) {
           counter.value = counter.value + step;
         } else {
@@ -439,13 +448,13 @@ function draw(data) {
           .transition()
           .duration(baseTime * interval_time)
           .ease(d3.easeLinear)
-          .tween("text", function (d) {
+          .tween("text", function(d) {
             var self = this;
             var i = d3.interpolate(self.textContent, counter.value),
               prec = (counter.value + "").split("."),
               round = prec.length > 1 ? Math.pow(10, prec[1].length) : 1;
 
-            return function (t) {
+            return function(t) {
               self.textContent = d3.format(format)(
                 Math.round(i(t) * round) / round
               );
@@ -453,7 +462,7 @@ function draw(data) {
           });
       } else if (use_type_info == true) {
         // 榜首type更新
-        top_type.data(currentData).text(function (d) {
+        top_type.data(currentData).text(function(d) {
           return d["type"];
         });
       }
@@ -463,7 +472,7 @@ function draw(data) {
       .enter()
       .insert("g", ".axis")
       .attr("class", "bar")
-      .attr("transform", function (d) {
+      .attr("transform", function(d) {
         return "translate(0," + yScale(yValue(d)) + ")";
       });
 
@@ -481,26 +490,26 @@ function draw(data) {
         .attr("height", "40")
         .attr("href", d => config.imgs[d.name]);
 
-      // barEnter
-      //   .append("circle")
-      //   .attr("fill-opacity", 0)
-      //   .attr("cy", 63)
-      //   .attr('fill', d => "url(#" + encodeURIComponent(d.name).replace("'", "%27").replace("(", "%28").replace(")", "%29") + ")")
-      //   .attr("stroke-width", "0px")
-      //   .transition("a")
-      //   .delay(500 * interval_time)
-      //   .duration(2490 * interval_time)
-      //   .attr("stroke", d => getColor(d))
-      //   .attr("stroke-width", "4px")
-      //   .attr("x", -16)
-      //   .attr("cx", -22)
-      //   .attr("cy", 13)
-      //   .attr("r", 40 / 2)
-      //   .attr("fill-opacity", 1);
+      barEnter
+        .append("circle")
+        .attr("fill-opacity", 0)
+        .attr("cy", 63)
+        .attr('fill', d => "url(#" + encodeURIComponent(d.name).replace("'", "%27").replace("(", "%28").replace(")", "%29") + ")")
+        .attr("stroke-width", "0px")
+        .transition("a")
+        .delay(500 * interval_time)
+        .duration(2490 * interval_time)
+        .attr("stroke", d => getColor(d))
+        .attr("stroke-width", "4px")
+        .attr("x", -16)
+        .attr("cx", -22)
+        .attr("cy", 13)
+        .attr("r", 40 / 2)
+        .attr("fill-opacity", 1);
     }
     barEnter
       .append("rect")
-      .attr("width", function (d) {
+      .attr("width", function(d) {
         if (enter_from_0) {
           return 0;
         } else {
@@ -533,13 +542,13 @@ function draw(data) {
         .duration(2490 * interval_time)
         .attr("fill-opacity", 1)
         .attr("y", 0)
-        .attr("class", function (d) {
+        .attr("class", function(d) {
           return "label ";
         })
         .attr("x", config.labelx)
         .attr("y", 20)
         .attr("text-anchor", "end")
-        .text(function (d) {
+        .text(function(d) {
           if (long) {
             return "";
           }
@@ -550,7 +559,7 @@ function draw(data) {
     // bar上文字
     var barInfo = barEnter
       .append("text")
-      .attr("x", function (d) {
+      .attr("x", function(d) {
         if (long) return 10;
         if (enter_from_0) {
           return 0;
@@ -559,7 +568,7 @@ function draw(data) {
         }
       })
       .attr("stroke", d => getColor(d))
-      .attr("class", function () {
+      .attr("class", function() {
         return "barInfo";
       })
       .attr("stroke-width", "0px")
@@ -567,7 +576,7 @@ function draw(data) {
       .transition()
       .delay(500 * interval_time)
       .duration(2490 * interval_time)
-      .text(function (d) {
+      .text(function(d) {
         if (use_type_info) {
           return d[divide_by] + "-" + d.name;
         }
@@ -577,7 +586,7 @@ function draw(data) {
         if (long) return 10;
         return xScale(xValue(d)) - 10;
       })
-      .attr("fill-opacity", function (d) {
+      .attr("fill-opacity", function(d) {
         if (xScale(xValue(d)) - 10 < display_barInfo) {
           return 0;
         }
@@ -585,24 +594,24 @@ function draw(data) {
       })
       .attr("y", 10)
       .attr("dy", ".5em")
-      .attr("text-anchor", function () {
+      .attr("text-anchor", function() {
         if (long) return "start";
         return "end";
       })
-      .attr("stroke-width", function (d) {
+      .attr("stroke-width", function(d) {
         if (xScale(xValue(d)) - 10 < display_barInfo) {
           return "0px";
         }
         return "1px";
       });
     if (long) {
-      barInfo.tween("text", function (d) {
+      barInfo.tween("text", function(d) {
         var self = this;
         self.textContent = d.value;
         var i = d3.interpolate(self.textContent, Number(d.value)),
           prec = (Number(d.value) + "").split("."),
           round = prec.length > 1 ? Math.pow(10, prec[1].length) : 1;
-        return function (t) {
+        return function(t) {
           self.textContent =
             d[divide_by] +
             "-" +
@@ -615,7 +624,7 @@ function draw(data) {
     if (!long) {
       barEnter
         .append("text")
-        .attr("x", function () {
+        .attr("x", function() {
           if (long) {
             return 10;
           }
@@ -629,7 +638,7 @@ function draw(data) {
         .style("fill", d => getColor(d))
         .transition()
         .duration(2990 * interval_time)
-        .tween("text", function (d) {
+        .tween("text", function(d) {
           var self = this;
           // 初始值为d.value的0.9倍
           self.textContent = d.value * 0.9;
@@ -637,15 +646,15 @@ function draw(data) {
             prec = (Number(d.value) + "").split("."),
             round = prec.length > 1 ? Math.pow(10, prec[1].length) : 1;
           // d.value = self.textContent
-          return function (t) {
-            self.textContent = d3.format(format)(
-              Math.round(i(t) * round) / round
-            ) + config.postfix;
+          return function(t) {
+            self.textContent =
+              d3.format(format)(Math.round(i(t) * round) / round) +
+              config.postfix;
             // d.value = self.textContent
           };
         })
         .attr("fill-opacity", 1)
-        .attr("class", function (d) {
+        .attr("class", function(d) {
           return "value";
         })
         .attr("x", d => {
@@ -665,7 +674,7 @@ function draw(data) {
     if (config.showLabel == true) {
       barUpdate
         .select(".label")
-        .attr("class", function (d) {
+        .attr("class", function(d) {
           return "label ";
         })
         .style("fill", d => getColor(d))
@@ -674,25 +683,25 @@ function draw(data) {
     if (!long) {
       barUpdate
         .select(".value")
-        .attr("class", function (d) {
+        .attr("class", function(d) {
           return "value";
         })
         .style("fill", d => getColor(d))
         .attr("width", d => xScale(xValue(d)));
     }
-    barUpdate.select(".barInfo").attr("stroke", function (d) {
+    barUpdate.select(".barInfo").attr("stroke", function(d) {
       return getColor(d);
     });
 
     if (config.use_img) {
-      barUpdate.select("circle").attr("stroke", function (d) {
+      barUpdate.select("circle").attr("stroke", function(d) {
         return getColor(d);
       });
     }
 
     var barInfo = barUpdate
       .select(".barInfo")
-      .text(function (d) {
+      .text(function(d) {
         if (use_type_info) {
           return d[divide_by] + "-" + d.name;
         }
@@ -702,13 +711,13 @@ function draw(data) {
         if (long) return 10;
         return xScale(xValue(d)) - 10;
       })
-      .attr("fill-opacity", function (d) {
+      .attr("fill-opacity", function(d) {
         if (xScale(xValue(d)) - 10 < display_barInfo) {
           return 0;
         }
         return 1;
       })
-      .attr("stroke-width", function (d) {
+      .attr("stroke-width", function(d) {
         if (xScale(xValue(d)) - 10 < display_barInfo) {
           return "0px";
         }
@@ -716,7 +725,7 @@ function draw(data) {
       });
 
     if (long) {
-      barInfo.tween("text", function (d) {
+      barInfo.tween("text", function(d) {
         var self = this;
         var str = d[divide_by] + "-" + d.name + "  数值:";
 
@@ -726,7 +735,7 @@ function draw(data) {
           ),
           prec = (Number(d.value) + "").split("."),
           round = prec.length > 1 ? Math.pow(10, prec[1].length) : 1;
-        return function (t) {
+        return function(t) {
           self.textContent =
             d[divide_by] +
             "-" +
@@ -739,25 +748,31 @@ function draw(data) {
     if (!long) {
       barUpdate
         .select(".value")
-        .tween("text", function (d) {
+        .tween("text", function(d) {
           var self = this;
 
           // if postfix is blank, do not slice.
           if (config.postfix == "") {
             var i = d3.interpolate(self.textContent, Number(d.value));
           } else {
-            var i = d3.interpolate(self.textContent.slice(0, -config.postfix.length), Number(d.value));
+            var i = d3.interpolate(
+              self.textContent.slice(0, -config.postfix.length),
+              Number(d.value)
+            );
           }
 
-          var i = d3.interpolate(deformat(self.textContent, config.postfix), Number(d.value))
+          var i = d3.interpolate(
+            deformat(self.textContent, config.postfix),
+            Number(d.value)
+          );
 
           var prec = (Number(d.value) + "").split("."),
             round = prec.length > 1 ? Math.pow(10, prec[1].length) : 1;
           // d.value = self.textContent
-          return function (t) {
-            self.textContent = d3.format(format)(
-              Math.round(i(t) * round) / round
-            ) + config.postfix;
+          return function(t) {
+            self.textContent =
+              d3.format(format)(Math.round(i(t) * round) / round) +
+              config.postfix;
             // d.value = self.textContent
           };
         })
@@ -775,7 +790,7 @@ function draw(data) {
       .transition()
       .duration(2500 * interval_time);
     barExit
-      .attr("transform", function (d) {
+      .attr("transform", function(d) {
         if (always_up) {
           return "translate(0," + "-100" + ")";
         }
@@ -791,8 +806,8 @@ function draw(data) {
       .attr("fill-opacity", 0)
       .attr("width", () => {
         if (always_up) return xScale(0);
-        return xScale(currentData[currentData.length - 1]["value"])
-      })
+        return xScale(currentData[currentData.length - 1]["value"]);
+      });
     if (!long) {
       barExit
         .select(".value")
@@ -805,7 +820,7 @@ function draw(data) {
     barExit
       .select(".barInfo")
       .attr("fill-opacity", 0)
-      .attr("stroke-width", function (d) {
+      .attr("stroke-width", function(d) {
         return "0px";
       })
       .attr("x", () => {
@@ -815,7 +830,7 @@ function draw(data) {
       });
     barExit.select(".label").attr("fill-opacity", 0);
     if (config.use_img) {
-      barExit.select("circle").attr("fill-opacity", 0)
+      barExit.select("circle").attr("fill-opacity", 0);
     }
   }
 
@@ -825,23 +840,23 @@ function draw(data) {
       .range([innerHeight, 0]);
     if (animation == "linear") {
       g.selectAll(".bar")
-        .data(currentData, function (d) {
+        .data(currentData, function(d) {
           return d.name;
         })
         .transition("1")
         .ease(d3.easeLinear)
         .duration(baseTime * update_rate * interval_time)
-        .attr("transform", function (d) {
+        .attr("transform", function(d) {
           return "translate(0," + yScale(yValue(d)) + ")";
         });
     } else {
       g.selectAll(".bar")
-        .data(currentData, function (d) {
+        .data(currentData, function(d) {
           return d.name;
         })
         .transition("1")
         .duration(baseTime * update_rate * interval_time)
-        .attr("transform", function (d) {
+        .attr("transform", function(d) {
           return "translate(0," + yScale(yValue(d)) + ")";
         });
     }

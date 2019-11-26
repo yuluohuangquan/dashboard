@@ -65,7 +65,7 @@
   item_x: 150,
 
   // 时间点间隔时间。
-  interval_time: 1,
+  interval_time: 2,
 
   // 上方文字水平高度。
   text_y: -50,
@@ -95,7 +95,7 @@
   format: ",.0f",
 
   // 后缀
-  postfix: "",
+  postfix: "22321",
 
   // 如果看不懂这是在干什么的话，建议不要修改这里。
   // 反格式化函数:
@@ -154,15 +154,15 @@
   // 图片路径，本地图片或者网上图片。
   // 也可在imgs.js中配置。
   imgs: {
-    // "条目": "http://i1.hdslb.com/bfs/face/983034448f81f45f05956d0455a86fe0639d6a36.jpg",
-    // "任意名称": "path/to/img"
+    "条目": "http://i1.hdslb.com/bfs/face/983034448f81f45f05956d0455a86fe0639d6a36.jpg",
+    "任意名称": "path/to/img"
   },
 
   // 全局背景颜色
   background_color: "#FFFFFF",
 
   // 矩形柱是否为圆角矩形
-  rounded_rectangle: false,
+  rounded_rectangle: true,
 
   // 是否显示x轴轴线
   show_x_tick: true,
