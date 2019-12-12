@@ -150,9 +150,9 @@
   showLabel: true,
 
   // label x轴位置
-  labelx: -50,
+  labelx: -10,
 
-  use_img: true,
+  use_img: false,
 
   // 图片路径，本地图片或者网上图片。
   // 也可在imgs.js中配置。
